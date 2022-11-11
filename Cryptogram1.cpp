@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+	freopen("input.txt","r",stdin);
+	for(int p=1;p<=10;p++)
+	{
+		int n,m;
+		cin>>n;
+		long a[100];
+		for(int i=0;i<n;i++)
+		{
+			cin>>a[i];
+		}
+		cin>>m;
+		char b;
+		int x,y,z;
+		for(int i=0;i<m;i++)
+		{
+			cin>>b;
+			cin>>x>>y;
+			for(int k=9;k>=x;k--)
+				{
+					a[k+y]=a[k];
+				}
+			for(int j=0;j<y;j++)
+			{
+				cin>>z;
+				a[x]=z;
+				//cout<<a[x]<<endl;
+						
+				x++;
+			}
+		}
+		for(int i=0;i<10;i++)
+		{
+			cout<<a[i]<<" ";
+		}
+		cout<<"\n";
+	}
+	return 0;
+}
