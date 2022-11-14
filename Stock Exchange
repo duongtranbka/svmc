@@ -1,0 +1,47 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+	freopen("input.txt","r",stdin);
+	int t;
+	cin>>t;
+	for(int p=1;p<=t;p++)
+	{
+		int n, a[100];
+		cin>>n;
+		for(int i=0;i<n;i++)
+		{
+			cin>>a[i];
+		}
+		int maxvalue,maxpos;
+		int sum=0;
+		int sum2=0;
+		int dem=0;
+		for(int i=0;i<n;i++)
+		{
+			maxvalue=a[i];
+			maxpos=i;
+			for(int j=i;j<n;j++)
+			{
+				if(a[j]>maxvalue)
+				{
+					maxvalue=a[j];
+					maxpos=j;
+				}
+			}
+			//cout<<maxvalue<<"-"<<maxpos<<endl;
+			for(int j=i;j<maxpos;j++)
+			{
+				sum2=sum2+a[j];
+				dem++;
+			}
+			//cout<<maxvalue<<"-"<<maxpos<<"-"<<dem<<endl;
+			sum=dem*maxvalue-sum2+sum;
+			sum2=0;
+			dem=0;
+			i=maxpos;
+		}
+		cout<<"#"<<p<<" "<<sum<<endl;
+	}
+	return 0;
+}
