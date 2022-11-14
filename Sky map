@@ -1,0 +1,96 @@
+#include <iostream>
+using namespace std;
+int Qx[100000];
+int Qy[100000];
+int Qd[100000];
+int f=-1,r=-1;
+void Push(int x, int y, int d)
+{
+	f++;
+	Qx[f] = x;
+	Qy[f] = y;
+	Qd[f]=d;
+}
+void Pop(int &x, int &y, int &d)
+{
+	r++;
+	x=Qx[r];
+	y=Qy[r];
+	d=Qd[r];
+}
+int dx[4]={-1,0,1,0};
+int dy[4]={0,1,0,-1};
+int M[102][102];
+int demm;
+void BFS(int x, int y)
+{
+     demm=0;
+	Push(x,y,0);
+	while(r!=f)
+	{
+		int a,b,d;
+		Pop(a,b,d);
+		d++;
+		for(int i=0;i<4;i++)
+		{
+			int aa=a+dx[i];
+			int bb=b+dy[i];
+			if(1 == M[aa][bb])
+			{
+				//cout<< aa<<"-"<<bb<<endl;
+				M[aa][bb] = 0;
+				Push(aa,bb,d);
+				demm++;
+			}
+		}
+		
+	}
+}
+int main()
+{
+	freopen("input.txt","r",stdin);
+	int t;
+	cin>>t;
+	for(int p=1;p<=t;p++)
+	{
+		int n;
+		cin>>n;
+		for(int i=0;i<n+2;i++)
+		{
+			for(int j=0;j<n+2;j++)
+			{
+				M[i][j]=0;
+			}
+		}
+		for(int i=1;i<=n;i++)
+		{
+			for(int j=1;j<=n;j++)
+			{
+				cin>>M[i][j];
+			}
+		}
+		int dem=0;
+		int maxx=0;
+		for(int i=1;i<=n;i++)
+		{
+			for(int j=1;j<=n;j++)
+			{
+				if(M[i][j] == 1)
+				{
+					BFS(i,j);
+					dem++;
+					if(demm>maxx)
+					{
+						maxx=demm;
+					}
+				}
+				f=-1;
+				r=-1;
+			}
+		}
+	
+		cout<<dem<<" "<<maxx<<endl;
+		//cout<<"\n";
+	}
+	return 0;
+}
