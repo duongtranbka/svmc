@@ -1,0 +1,144 @@
+/*
+You need to capture the stationary piece by moving the mobile piece with the minimum amount of moves.　　
+
+Write a program to find out the minimum number moves to catch a piece.
+
+[Input]
+
+Several test cases can be included in the inputs. T, the number of cases is given in the first row of the inputs. After that, the test cases as many as T are given in a row.
+
+N, the numbers of the rows and M, the number of columns of the chessboard are given in the first row of each test case.
+
+R & C is the location information of the attacking piece and S & K is the location of the defending pieces and are given in the row at the second line. However, the location of the uppermost end of the left end is (1, 1)
+
+Maximum value of N or M is 1000.
+
+[Output]
+
+Output the minimum number of movements to catch a defending piece at the first line of each test case.
+
+Print "Case #tn" before each answer where "tn" is test case number.
+
+[I/O Example]
+
+Input
+
+2
+
+9 9
+
+3 5 2 8
+
+20 20
+
+2 3 7 9
+
+Output
+
+Case #1
+
+2
+
+Case #2
+
+5
+*/
+#include <iostream>
+using namespace std;
+int Qx[1000000],Qy[1000000],Qd[1000000];
+int M[1000][1000] ;
+int f=-1,r=-1;
+int dx[8]={-2,-2,-1,1,2,2,1,-1};
+int dy[8]={-1,1,2,2,1,-1,-2,-2};
+int n,m,result,check;
+void Push(int x, int y, int d)
+{
+	f++;
+	Qx[f]=x;
+	Qy[f]=y;
+	Qd[f]=d;
+}
+void Pop(int &x, int &y, int &d)
+{
+	r++;
+	x=Qx[r];
+	y=Qy[r];
+	d=Qd[r];
+}
+void BFS(int x, int y)
+{
+	int aa,bb;
+	 check=0;
+	Push(x,y,0);
+	int a,b,d;
+		while(f!=r)
+		{
+			Pop(a,b,d);
+			d++;
+			for(int i=0;i<8;i++)
+			{
+				 aa=a+dx[i];
+				 bb=b+dy[i];
+				if(aa >= 0 && aa <m && bb>=0 && bb <n)
+				{
+					if(M[aa][bb] == 2)
+					{
+						//d++;
+						Push(aa,bb,d);
+						check++;
+						break;
+					}
+					if(M[aa][bb] == 1)
+					{
+						Push(aa,bb,d);
+						M[aa][bb]=0;
+					}
+				}
+			}
+			if(check != 0)
+			{
+				break;
+			}
+		}
+}
+int main()
+{
+//	freopen("input.txt", "r", stdin);
+	int t;
+	cin>>t;
+	for(int p=1;p<=t;p++)
+	{
+		cin>>m>>n;
+		int x,y,h,k;
+		cin >>x>>y>>h>>k;
+		for(int i=0;i<m;i++)
+		{
+			for(int j=0;j<n;j++)
+			{
+				M[i][j]=1;
+				//cout<<M[i][j]<<" ";
+			}
+			//cout<<"\n";
+		} 
+		--x;
+		--y;
+		--h;
+		--k;
+		M[x][y]=0;
+		M[h][k]=2;
+	/*	for(int i=0;i<m;i++)
+		{
+			for(int j=0;j<n;j++)
+			{
+				cout<<M[i][j]<<" ";
+			}
+			cout<<"\n";
+		} */
+		BFS(x,y);
+		result=Qd[f];
+		f=-1,r=-1;
+		cout<<"Case #"<<p<<endl;
+		cout<<result<<endl;  
+	}
+	return 0;
+}
