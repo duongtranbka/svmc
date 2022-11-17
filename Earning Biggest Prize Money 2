@@ -161,9 +161,9 @@ int convert()
 void swap(int x, int y)
 {
     int temp;
-     temp=a[y];
-    a[y]=a[x];
-    a[x]=temp;
+     temp=n[y];
+    n[y]=n[x];
+    n[x]=temp;
 }
 void bruteFor(int i,int x)
 {
