@@ -143,5 +143,75 @@ Case #3
 88832
 
 ﻿
-
+#include <iostream>
+using namespace std;
+char n[7];
+int a[100],k,leng,result;
+int kqua=-1;
+int convert()
+{
+    int answer=0;
+    for(int i=0;n[i] != 0;i++)
+    {
+        a[i]=n[i]-'0';
+        answer=answer*10+a[i];
+    }
+    return answer;
+}
+void swap(int x, int y)
+{
+    int temp;
+     temp=a[y];
+    a[y]=a[x];
+    a[x]=temp;
+}
+void bruteFor(int i,int x)
+{
+    if(i==leng)
+    {
+        bool check= false;
+        if((k-x)%2 !=0)
+        {
+            check=true;
+            swap(leng-1,leng-2);
+        }
+     result=convert();
+     if(result>kqua)
+     {
+         kqua=result;
+         swap(leng-1,leng-2);
+     }
+     return ;
+    }
+    if(x <k)
+    {
+        for(int index=i+1;index<leng;index++)
+        {
+            swap(i,index);
+            bruteFor(i+1,x+1);
+            swap(i,index);
+        }
+    }
+    bruteFor(i+1,x);
+}
+int main()
+{
+    int t;
+	cin>>t;
+	leng=0;
+	for(int p=1;p<=t;p++)
+	{
+		cin>>n>>k;
+	for(int i=0;n[i]!=0;i++)
+	{
+	    leng++;
+	}
+	//bruteFor(0,0);
+	//cout<<result<<endl;
+	swap(1,2);
+	int test = convert();
+	cout<<test;
+	}
+    return 0;
+}
  
