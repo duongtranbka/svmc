@@ -196,22 +196,27 @@ void bruteFor(int i,int x)
 }
 int main()
 {
+	freopen("input.txt","r",stdin);
     int t;
 	cin>>t;
-	leng=0;
+	
 	for(int p=1;p<=t;p++)
 	{
+		leng=0;
 		cin>>n>>k;
 	for(int i=0;n[i]!=0;i++)
 	{
 	    leng++;
 	}
+	//cout<<leng<<endl;
 	//bruteFor(0,0);
 	//cout<<result<<endl;
-	swap(1,2);
-	int test = convert();
-	cout<<test;
+	//swap(1,2);
+	//int test = convert();
+	bruteFor(0,0);
+	cout<<"Case #"<<p<<endl;
+	cout<<kqua<<endl;
+	kqua=-1;
 	}
     return 0;
 }
- 
