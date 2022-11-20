@@ -230,11 +230,11 @@ int main()
 			if(check%2 == 0)
 			{
 			cout<<"Case #"<<p<<endl;
-			cout<<M[k]<<endl;
+			cout<<M[n-1]<<endl;
 			}else
 			{
 			cout<<"Case #"<<p<<endl;
-			cout<<M[k-1]<<endl;			
+			cout<<M[n-2]<<endl;			
 			}
 		}
 	}
