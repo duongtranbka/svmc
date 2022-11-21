@@ -33,3 +33,81 @@ Case #2
 63 1 121
 121 0 243
 
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream> 
+using namespace std;
+#define MaxN 100 
+#define Mod 100000007 
+int N , M ; 
+int A[MaxN][MaxN] ;
+int R[MaxN][MaxN] ;
+
+void nhanMT(int P[MaxN][MaxN] , int Q[MaxN][MaxN])
+{
+	int B[MaxN][MaxN] ;
+	for(int i = 0 ; i < N ; i++)
+	{
+		for(int j = 0 ; j < N ; j++)
+		{
+			B[i][j] = 0 ; 
+			for(int k = 0 ; k < N ; k++)
+			{
+				B[i][j] += (long long)P[i][k]*(long long)Q[k][j] % Mod ; 
+				B[i][j] %= Mod ; 
+			}
+		}
+	}
+
+	for(int i = 0 ; i < N ; i++)
+	{
+		for(int j = 0 ; j < N ; j++)
+		{
+			R[i][j] = B[i][j] ; 
+		}
+	}
+}
+void DQ(int K)
+{
+	if(K==1) return ; 
+	DQ(K/2) ; 
+	if(K%2 == 0 )
+	{
+		nhanMT(R,R) ;  
+	}
+	else 
+	{
+		nhanMT(R,R) ; 
+		nhanMT(R,A) ;
+	}
+}
+int main() {
+	freopen("input.txt" , "r" , stdin) ; 
+	int T;
+	cin>> T;
+	for(int tc = 1 ; tc <= T ; tc++)
+	{
+		cin >> N ; 
+
+		cin >> M ;
+		for(int i = 0 ; i < N ; i++)
+		{
+			for(int j = 0 ; j < N ; j++)
+			{
+				cin >> A[i][j] ; 
+				R[i][j] = A[i][j] ; 
+			}
+		}
+		DQ(M) ;
+		cout << "Case #" << tc << endl ;
+		for(int i = 0 ; i < N ; i++)
+		{
+			for(int j = 0 ; j < N ; j++)
+			{
+				cout << R[i][j] << " " ;  
+			}
+			cout << endl ; 
+		}
+	}
+	return 0 ; 
+}
