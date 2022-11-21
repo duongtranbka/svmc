@@ -53,3 +53,48 @@ Output
 #2 1.0306534300
 
 . . .
+
+#include <iostream>
+using namespace std;
+double ee = 1e-9;
+double A[100];
+int B[100];
+double find(double a, double b, int m, int n)
+{
+	double mid= (b-a)/2;
+	double F1,F2;
+	F1=m/(mid*mid);
+	F2=n/(mid*mid);
+	if(F1<F2)
+	{
+		b=b-ee;
+		find(a,b,m,n);
+	}else if(F1>F2)
+	{
+		a=a+ee;
+		find(a,b,m,n);
+	}else
+	{
+		return mid;
+	}
+}
+int main()
+{
+	freopen("input.txt","r",stdin);
+	for(int p=1;p<=1;p++)
+	{
+		int n;
+		cin>>n;
+		for(int i=0;i<n;i++)
+		{
+			cin>>A[i];
+		}
+		for(int i=0;i<n;i++)
+		{
+			cin>>B[i];
+		}
+		double result = A[0]+ find(A[0],A[1],B[0],B[1]);
+		cout<<result;
+	}
+	return 0;
+}
