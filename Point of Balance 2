@@ -56,23 +56,26 @@ Output
 
 #include <iostream>
 using namespace std;
-double ee = 1e-9;
-double A[100];
-int B[100];
-double find(double a, double b, int m, int n)
+int n,b[100];
+double a[100];
+double ee=0.000000001;
+long long xx=1000000000;
+double find(double x, double y, int z, int t)
 {
-	double mid= (b-a)/2;
-	double F1,F2;
-	F1=m/(mid*mid);
-	F2=n/(mid*mid);
-	if(F1<F2)
+	double mid=(y-x)/2;
+	double F1=z/(mid*mid);
+	double F2=t/(mid*mid);
+	double castF1,castF2;
+	castF1=F1*xx;
+	castF2=F2*xx;
+	if((int)castF1<(int)castF1)
 	{
-		b=b-ee;
-		find(a,b,m,n);
-	}else if(F1>F2)
+		y=y-2*ee;
+		find(x,y,z,t);
+	}else if((int)castF1>(int)castF1)
 	{
-		a=a+ee;
-		find(a,b,m,n);
+		x+= 2*ee;
+		find(x,y,z,t);
 	}else
 	{
 		return mid;
@@ -81,20 +84,23 @@ double find(double a, double b, int m, int n)
 int main()
 {
 	freopen("input.txt","r",stdin);
-	for(int p=1;p<=1;p++)
+	for(int tc=1;tc<=10;tc++)
 	{
-		int n;
-		cin>>n;
+		cin >>n;
 		for(int i=0;i<n;i++)
 		{
-			cin>>A[i];
+			cin>>a[i];
+			//cout<<setprecision(2)<<a[i]<<" ";
 		}
 		for(int i=0;i<n;i++)
 		{
-			cin>>B[i];
+			cin>>b[i];
+			//cout<<b[i]<<" ";
 		}
-		double result = A[0]+ find(A[0],A[1],B[0],B[1]);
-		cout<<result;
+		double result = 0;
+		result = find(a[0],a[1],b[0],b[1]);
+		printf("%.9lf",result);
+		cout<<endl;
 	}
 	return 0;
 }
