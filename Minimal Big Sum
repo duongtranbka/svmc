@@ -110,6 +110,10 @@ void dequi(int k, int check)
 			sum=sum+a[i];
 		}
 	}
+	if(sum>maxsum)
+	{
+		maxsum=sum;
+	}
 	if(dem<=k)
 	{
 		result= maxsum;
