@@ -1,0 +1,178 @@
+#include <iostream>
+using namespace std;
+int n,M[202][202],N[202][202];
+int dx[4]={-1,0,1,0};
+int dy[4]={0,1,0,-1};
+int Qx[1000000],Qy[1000000],Qd[1000000];
+int f=-1,r=-1;
+int so_buoc;
+void Push(int x, int y, int d)
+{
+	f++;
+	Qx[f]=x;
+	Qy[f]=y;
+	Qd[f]=d;
+}
+void Pop(int &x, int &y, int &d)
+{
+	r++;
+	x=Qx[r];
+	y=Qy[r];
+	d=Qd[r];
+}
+int BFS(int x, int y) 
+{
+	M[x][y]=0;
+	f=-1;
+	r=-1;
+	int aa,bb,a,b,d;
+	Push(x,y,0);
+	int check;
+	int congchua=0;
+	while(f!=r)
+	{
+		check=0;
+		Pop(a,b,d);
+		d++;
+		for(int i=0;i<4;i++)
+		{
+			aa=a+dx[i];
+			bb=b+dy[i];
+			if(M[aa][bb] == 2)
+			{
+                congchua++;
+				check++;;
+				break;
+			}else if(aa>0 && aa<=n && bb >0 && bb<=n && M[aa][bb]==1)
+			{
+				Push(aa,bb,d);
+				M[aa][bb]=0;
+				check++;
+			}
+		}
+		if(check != 0)
+		{
+			so_buoc=d;
+		}
+		check=0;
+		if(congchua!=0)
+		{
+			break;
+		}
+	}
+	if(congchua==0)
+	{
+		so_buoc=-1;
+	}
+	return so_buoc;
+}
+/*
+void BFSfinal(int x, int y)
+{
+	M[x][y]=0;
+	f=-1;
+	r=-1;
+	int check;
+	int aa,bb,a,b,d;
+	int diemdich=0;
+	Push(x,y,0);
+	while(f!=r)
+	{
+		check=0;
+		Pop(a,b,d);
+		d++;
+		for(int i=0;i<4;i++)
+		{
+			aa=a+dx[i];
+			bb=b+dy[i];
+			if(aa==n && bb ==n)
+			{
+				diemdich++;
+				check++;
+				break;
+			}else if(aa>0 && aa<=n && bb >0 && bb<=n && M[aa][bb]==1)
+			{
+				Push(aa,bb,d);
+				M[aa][bb]=0;
+				check++;
+			}
+		}
+		if(check!=0)
+		{
+			so_buoc++;
+		}
+		if(diemdich !=0)
+		{
+			break;
+		}
+	}
+	if(diemdich==0)
+	{
+		so_buoc=-1;
+	}
+} */
+int main()
+{
+	freopen("input.txt","r",stdin);
+	int t;
+	cin>>t;
+		for(int tc=1;tc<=t;tc++)
+		{
+			cin>>n;
+			for(int i=0;i<n+2;i++)
+			{
+				for(int j=0;j<n+2;j++)
+				{
+					M[i][j]=0;
+					N[i][j]=0;
+				}
+			}
+			for(int i=1;i<n+1;i++)
+			{
+				for(int j=1;j<n+1;j++)
+				{
+					cin>>M[i][j];
+					N[i][j]=M[i][j];
+				}
+			}
+			int x;
+			int y;
+			for(int i=1;i<n+1;i++)
+			{
+				for(int j=1;j<n+1;j++)
+				{
+					if(M[i][j] == 2)
+					{
+						x=i;
+						y=j;
+						break;
+					}
+				}
+			}
+			
+			//cout<<x<< " "<<y<<endl;
+			so_buoc=0;
+			int result1,result2;
+			 result1 = BFS(1,1);
+			for(int i=1;i<n+1;i++)
+			{
+				for(int j=1;j<n+1;j++)
+				{
+					M[i][j]=N[i][j];
+				}
+			}
+			//cout<<so_buoc<<endl;
+			if(so_buoc!= - 1)
+			{
+			 result2 =	BFS(n,n);
+			}
+			if(so_buoc!= -1)
+			{
+				cout<<result1+result2<<endl;
+			}else
+			{
+				cout<<"-1"<<endl;
+			}
+		}
+	return 0;
+}
