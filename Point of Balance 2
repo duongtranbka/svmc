@@ -55,52 +55,58 @@ Output
 . . .
 
 #include <iostream>
+//#include <math.h>
 using namespace std;
-int n,b[100];
-double a[100];
-double ee=0.000000001;
-long long xx=1000000000;
-double find(double x, double y, int z, int t)
-{
-	double mid=(y-x)/2;
-	double F1=z/(mid*mid);
-	double F2=t/(mid*mid);
-	double castF1,castF2;
-	castF1=F1*xx;
-	castF2=F2*xx;
-	if((int)castF1<(int)castF1)
-	{
-		y=y-2*ee;
-		find(x,y,z,t);
-	}else if((int)castF1>(int)castF1)
-	{
-		x+= 2*ee;
-		find(x,y,z,t);
-	}else
-	{
-		return mid;
+
+#define MaxN 10
+#define ee 0.000000001
+
+double F1, F2;
+double mid;
+int kc[MaxN], kl[MaxN];
+int N;
+
+double findkc (double l, double r){
+	while (l < r){
+		mid = (l + r )/2;
+		F1 = F2 = 0;
+		for (int i = 0; i < N; i++){
+			if (kc[i] < mid ) 
+				F1 += kl[i] / (( mid - kc[i]) * (mid - kc[i]));
+			else
+				F2 += kl[i] / ((kc[i] - mid) * ( kc[i] - mid));
+		}
+
+		if (F2 - F1 > ee) 
+			 r = mid;
+		else if (F1 - F2 > ee)
+			l = mid;
+		else
+			return mid;
 	}
 }
-int main()
-{
-	freopen("input.txt","r",stdin);
-	for(int tc=1;tc<=10;tc++)
-	{
-		cin >>n;
-		for(int i=0;i<n;i++)
-		{
-			cin>>a[i];
-			//cout<<setprecision(2)<<a[i]<<" ";
+
+int main(){
+	
+	freopen("input.txt", "r", stdin);
+	for (int tc =1; tc <= 10; tc++){
+		cin>> N;
+		for (int i = 0; i < N; i++){
+			cin>> kc[i];
 		}
-		for(int i=0;i<n;i++)
-		{
-			cin>>b[i];
-			//cout<<b[i]<<" ";
+
+		for (int i = 0; i < N; i++){
+			cin>> kl[i];
 		}
-		double result = 0;
-		result = find(a[0],a[1],b[0],b[1]);
-		printf("%.9lf",result);
+		cout<<"#"<<tc<< " ";
+		for (int i = 0; i < N-1;i++){
+		findkc(kc[i],kc[i+1]);
+		printf("%0.10f ", mid);
+		}
 		cout<<endl;
+		
 	}
+
 	return 0;
 }
+
