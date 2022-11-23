@@ -108,3 +108,156 @@ Case #2
 Case #3
 
 9
+
+///
+
+#include <iostream>
+using namespace std;
+int n;
+int map[1000][1000];
+int canon[1000];
+int link1[1000];
+int check[1000];
+int parent[1000];
+int rank1[1000];
+void make_set(){
+	for(int i = 0 ; i< n ; i++ ){
+		parent[i] = i;
+	}
+}
+int find_set(int x){
+	if(parent[x]!=x){
+		parent[x] = find_set(parent[x]);
+	}
+	return parent[x];
+}
+void Union(int x, int y) {
+	int xset = find_set(x);
+	int yset = find_set(y);
+	if(xset == yset) {
+		return;
+	}
+	if( rank1[xset] < rank1[yset]){
+		parent[xset] = yset;
+	}
+	else if (rank1[xset] > rank1[yset]){
+		parent[yset] = xset;	
+	}
+	else{
+		parent[yset] = xset;
+		rank1[xset]++;
+	}
+}
+int findParent(int node)
+{
+	while(parent[node]  != node)
+		node = parent[node];
+	return node;
+}
+bool isDone(){
+	for(int i = 0;i<n;i++){
+		if(check[i] == 0) {return false;}
+	}
+	return true;
+}
+int kruskal()
+{
+	for(int i = 0; i < n; i++)
+	{
+		parent[i] = i;
+	}
+	int u,v,k = 0, count = 0;
+	int first=0;
+	int	second = 0;
+	int f[200], s[200], weight[200];
+	int mini;
+	for(int i =0;i<200;i++){
+		weight[i] =0;
+	}
+	for(int i = 0; i < n; i++)
+	{
+		for(int j = 0; j < n ; j++)
+		{
+			if(map[i][j] == 0) map[i][j] == 0;
+		}
+	}
+	while(!isDone())
+	{
+		mini = 0;
+		for(int i =0; i < n; i++)
+		{
+			for(int j = 0; j< n; j++)
+			{
+				if(map[i][j] > mini)
+				{
+					mini = map[i][j];
+					first = i;
+					second = j;
+				}
+			}
+		}
+		u = findParent(first);
+		v = findParent(second);
+		if( u != v)
+		{
+			parent[u] = v;
+			f[k] = first;
+			s[k] = second;
+			weight[k] = map[first][second];
+			check[first] = 1;
+			check[second] = 1;
+			k++;
+		}
+		map[first][second] = map[second][first] = 0;
+	}
+	int minw = 0;
+	for(int i = 0; i < n-1; i++)
+	{
+		minw+=weight[i];
+	}
+
+	return minw;
+}
+
+int main(){
+	//freopen("input.txt","r",stdin);
+	int TC;
+	cin >> TC;
+	for(int tc = 1;tc<=TC;tc++){
+		cin >> n;
+		int sum = 0;
+		for(int i =0;i<1000;i++){
+			canon[i] = 0;
+			link1[i] = 0;
+			check[i] = 0;
+			for(int j =0;j<1000;j++){
+				map[i][j] =0;
+			}
+		}
+		for(int i =0;i<n;i++){
+			int a;
+			cin >> a;
+			cin >> canon[a];
+			cin >> link1[a];
+			for(int j = 0;j<link1[a];j++){
+				int x;
+				cin >> x;
+				map[a][x] = 1;
+			}
+		}
+	for(int i = 0; i < n;i++){
+		for(int j = 0;j<n;j++){
+			if(map[i][j] !=0 ){
+				map[i][j] = canon[i]+canon[j];
+				map[j][i] = map[i][j];
+				sum += map[i][j];
+			}
+		}
+	}
+	int a = kruskal();
+	cout << sum/2 - a  << endl;
+	}
+	return 0;
+
+}
+
