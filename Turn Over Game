@@ -1,0 +1,117 @@
+#include <iostream>
+using namespace std;
+char c[5][5];
+int a[5][5],aa,bb,result;
+int dx[4]={-1,0,1,0};
+int dy[4]={0,1,0,-1};
+bool visited[10][10];
+void changebw(int x, int y)
+{
+	if(a[x][y] == 0)
+	{
+		a[x][y] =1;
+	}else
+	{
+		a[x][y]=0;
+	}
+	for(int i=0;i<4;i++)
+	{
+		aa=x+dx[i];
+		bb=y+dy[i];
+		if(aa>=0 && aa<4 && bb >=0 && bb<4)
+		{
+			if(a[aa][bb] == 0)
+			{
+				a[aa][bb]=1;
+			}
+			else
+			{
+				a[aa][bb]=0;
+			}
+		}
+	}
+}
+bool checkresult()
+{
+	int check =0;
+	for(int i=0;i<4;i++)
+	{
+		for(int j=0;j<4;j++)
+		{
+			if(a[i][j]!= a[0][0])
+			{
+				check++;
+				break;
+			}
+		}
+		if(check != 0)
+		{
+			break;
+		}
+	}
+	if(check == 0)
+	{
+		return true;
+	}else
+	{
+		return false;
+	}
+}
+void backtrack(int k, int dem)
+{
+
+	if(k== 16)
+	{
+			if(checkresult()==true)
+		{
+			if(dem>result)
+			{
+				result= dem;
+			}
+			return ;
+		}else
+		return ;
+	}
+	
+			backtrack(k+1,dem);
+			changebw(k/4,k%4);
+			backtrack(k+1,dem+1);
+			changebw(k/4,k%4);
+	
+}
+int main()
+{
+	freopen("input.txt","r",stdin);
+	int t;
+	cin>>t;
+	for(int tc=1;tc<=t;tc++)
+	{
+		for(int i=0;i<4;i++)
+		{
+			for(int j=0;j<4;j++)
+			{
+				cin>>c[i][j];
+				if(c[i][j] == 'b')
+				{
+					a[i][j] = 0;
+				}else if(c[i][j] == 'w')
+				{
+					a[i][j] = 1;
+				}
+				//cout<<a[i][j]<< " ";
+			}
+			//cout<<"\n";
+		}
+		result=0;
+		backtrack(0,0);
+		cout<<"Case #"<<tc<<endl;
+		if(result == 0)
+		{
+			cout<<"impossible"<<endl;
+		}else
+		{
+			cout<<result/3<<endl;
+		}
+	}
+	return 0;
+}
