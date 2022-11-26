@@ -55,58 +55,54 @@ Case #1
 Case #2
 260
 260
-#include<iostream>
+#include <iostream>
 using namespace std;
-int n=8;
-int map[20][20];
-int ans=0;
-bool h[11],c[11],nguoc[22],xuoi[22];
-int a[11];
-void test(int x)
+int M[10][10],result;
+bool h[10],c[10],xuoi[20],nguoc[20];
+void backtrack(int k, int sum)
 {
-	for(int i=0;i<n;i++)
+	if(k==8)
 	{
-		if(!h[x] && !c[i] && !xuoi[x+i-1] && !nguoc[x-i+n] )
+		if(sum>result)
 		{
-			a[x]=i;
-			h[x]=c[i]=xuoi[x+i-1]=nguoc[x-i+n]=true;
-			if(x==n-1)
-			{
-				int dem=0;
-				for(int k=0;k<n;k++)
-				{
-					dem=dem+map[k][a[k]];
-				}
-				if(dem>ans) ans=dem;
-			}
-			else test(x+1);
-			h[x]=c[i]=xuoi[x+i-1]=nguoc[x-i+n]=false;
+			result=sum;
+		}
+		return;
+	}
+	for(int i=0;i<8;i++)
+	{
+		if(!h[k] && !c[i] && !xuoi[k+i+1] && !nguoc[k-i+8])
+		{
+			h[k]=c[i]=xuoi[k+i+1]=nguoc[k-i+8]=true;
+			backtrack(k+1,sum+M[k][i]);
+			h[k]=c[i]=xuoi[k+i+1]=nguoc[k-i+8]=false;
 		}
 	}
+	return ;
 }
 int main()
 {
-	//freopen("input.txt","r",stdin);
+	freopen("input.txt","r",stdin);
 	int t;
-	cin >> t;
-	for(int tc=1;tc<=t;tc++)
-	{
-		int p;
-		cin >> p;
-		cout << "Case" << " "<< "#" << tc <<  endl;
-		for(int k=0;k<p;k++)
+	cin>>t;
+		for(int tc=1;tc<=t;tc++)
 		{
-            ans=0;
-			for(int i=0;i<n;i++)
+			int n;
+			cin>>n;
+			cout<<"Case #"<<tc<<endl;
+			for(int p=1;p<=n;p++)
 			{
-				for(int j=0;j<n;j++)
+				for(int i=0;i<8;i++)
 				{
-					cin >> map[i][j];
+					for(int j=0;j<8;j++)
+					{
+						cin>>M[i][j];
+					}
 				}
+				result=0;
+				backtrack(0,0);
+				cout<<result<<endl;
 			}
-			test(0);
-			cout << ans << endl;
 		}
-	}
 	return 0;
 }
