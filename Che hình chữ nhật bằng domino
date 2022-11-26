@@ -57,26 +57,43 @@ In mỗi test case trên một dòng, dòng đầu tiên là "#x", trong đó x 
 1 6 4 2 0 4 6 2
 #include <iostream>
 using namespace std;
-bool domino[8][8],board[9][10];
-int M[9][10],aa,bb,x,y,result;
+bool domino[10][10],board[10][10];
+int M[10][10],result;
 int dx[2]={0,1};
 int dy[2]={1,0};
+bool checkvalue()
+{
+	for(int i=0;i<7;i++)
+	{
+		for(int j=0;j<8;j++)
+		{
+			if(board[i][j] == false)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
 void backtrack(int k)
 {
 		if(k==56)
 		{
-			result++;
+			if(checkvalue)
+			{
+				result++;
+			}
 			return ;
 		}
-		x=k/8;
-		y=k%8;
+		int x=k/8;
+		int y=k%8;
 		if(!board[x][y])
 		{
 			for(int i=0;i<2;i++)
 			{
-				aa=x+dx[i];
-				bb=y+dy[i];
-				if(aa>=0&& aa<7 && bb>0 && bb<8 && !board[aa][bb] && !domino[M[x][y]][M[aa][bb]]  )
+				int aa=x+dx[i];
+				int bb=y+dy[i];
+				if(aa>=0&& aa<7 && bb>=0 && bb<8 && !board[aa][bb] && !domino[M[x][y]][M[aa][bb]]  )
 				{
 					board[x][y]=true;
 					board[aa][bb]=true;
@@ -89,7 +106,6 @@ void backtrack(int k)
 					board[x][y]=false;
 				}
 			}
-			return;
 		}else
 		{
 			backtrack(k+1);
