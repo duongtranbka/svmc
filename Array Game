@@ -1,0 +1,111 @@
+Có 1 trò chơi với dãy gồm N số như sau:
+
+Mỗi bước đi bạn phải chia mảng thành 2 phần không rỗng sao cho tổng các phần tử bên trái bằng tổng phần tử bên phải. Nếu chia được bạn sẽ được 1 điểm, nếu không chia được trò chơi kết thúc.
+
+Sau mỗi lần chia thành công, bạn phải bỏ 1 trong 2 phần đã chia và tiếp tục trò chơi với phần còn lại.
+
+Cho 1 dãy, hỏi số điểm nhiều nhất mà bạn có thể thu được là bao nhiêu?
+
+Input
+
+Dòng đầu tiên là số lượng test case T (T <= 20).
+
+Dòng đầu tiên của mỗi test case là N (N <= 20,000) là số lượng phần tử của dãy. Dòng tiếp theo là N phần tử của dãy đó.
+
+ 
+
+Output
+
+Mỗi test case in ra số điểm nhiều nhất mà có thể thu được
+
+ 
+
+Sample
+
+Input
+
+3
+
+3
+
+3 3 3
+
+4
+
+2 2 2 2
+
+7
+
+4 1 0 1 1 0 1
+
+Output
+
+0
+
+2
+
+3
+
+///
+#include <iostream>
+using namespace std;
+int a[20000],n,dem;
+int sum1,sum2;
+void backtrack(int k , int x, int y)
+{
+	if(k>n/2)
+	{
+		return ;
+	}
+	sum1=0;
+	sum2=0;
+	for(int i=x;i<x+k;i++)
+	{
+		sum1+=a[i];
+	}
+	for(int i=y;i>=x+k;i--)
+	{
+		sum2+=a[i];
+	}
+	if(sum1==sum2)
+	{
+		dem++;
+		backtrack(k,x,x+k-1);
+		backtrack(k,x+k,y);
+	}
+	sum1=0;
+	sum2=0;
+	for(int i=y;i>y-k;i--)
+	{
+		sum1+=a[i];
+	}
+	for(int i=x;i<=y-k;i++)
+	{
+		sum2+=a[i];
+	}
+	if(sum1==sum2)
+	{
+		dem++;
+		backtrack(k,x,y-k);
+		backtrack(k,y-k+1,y);
+	}
+	backtrack(k+1,x,y);
+}
+int main()
+{
+	//freopen("input.txt","r",stdin);
+	int t;
+	cin>>t;
+	for(int tc=1;tc<=t;tc++)
+	{
+		cin>>n;
+		for(int i=0;i<n;i++)
+		{
+			cin>>a[i];
+		}
+		dem=0;
+		backtrack(1,0,n-1);
+		cout<<dem<<endl;
+	}
+	return 0;
+}
