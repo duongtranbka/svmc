@@ -84,13 +84,13 @@ Case #5
 ///
 #include <iostream>
 using namespace std;
-int n,m,M[100][100],Qx[10000000],Qy[10000000],Qd[10000000],dem,result;
+int n,m,M[100][100],result,index;
+int Qx[10000000],Qy[10000000],Qd[10000000];
+int f=-1,r=-1;
 int dx[4]={-1,0,1,0};
 int dy[4]={0,1,0,-1};
-int f=-1,r=-1;
-int rr=-1;
-int ax[20],ay[20],adj[100][100];
-int node1,node2;
+int ax[20],bx[20];
+bool visited[20];
 void Push(int x, int y, int d)
 {
 	f++;
@@ -105,152 +105,90 @@ void Pop(int &x, int &y, int &d)
 	y=Qy[r];
 	d=Qd[r];
 }
-void BFS(int x, int y)
+int BFS(int x, int y, int h, int k)
 {
 	f=-1;
 	r=-1;
 	Push(x,y,0);
-	int aa,bb,a,b,d;
-	while (f!=r)
+	while(f!=r)
 	{
+		int a,b,d;
 		Pop(a,b,d);
 		d++;
-		for(int i=0;i<4;i++)
+	for(int i=0;i<4;i++)
+	{
+		int aa=a+dx[i];
+		int bb=b+dy[i];
+		if(aa>=0 && aa<n && bb>=0 && bb <m && 2 != M[aa][bb])
 		{
-		aa=a+dx[i];
-		bb=b+dy[i];
-		if(aa>0 && aa<n && bb>0 && bb <m && M[aa][bb] !=2)
-		{
-			if(M[aa][bb] == 1)
+			if( aa == h && bb == k)
 			{
-				node1=aa;
-				node2=bb;
-				result+=Qd[f];
-				return ;
+				return Qd[f];
 			}
 			Push(aa,bb,d);
 		}
+	}
+	}
+	return -1;
+}
+void backtrack(int k, int x, int y, int sum)
+{
+	if(k==index)
+	{
+		if(sum<result)
+		{
+			result=sum;
+		}
+		return;
+	}
+	for(int i=0;i<index;i++)
+	{
+		if(!visited[i])
+		{
+			visited[i]=true;
+			int kc = BFS(x,y,ax[i],bx[i]);
+			backtrack(k+1,ax[i],bx[i],sum+kc);
+			visited[i]=false;
 		}
 	}
+
 }
 int main()
 {
-	//freopen("input.txt","r",stdin);
+	freopen("input.txt","r",stdin);
 	int t;
 	cin>>t;
 	for(int tc=1;tc<=t;tc++)
 	{
-		cin>>n>>m;
+		cin >>n>>m;
+		int xx,yy;
+		index=0;
+		result=9999999;
 		for(int i=0;i<n;i++)
 		{
 			for(int j=0;j<m;j++)
 			{
-				cin>>M[i][j];
-			}
-		}
-		dem=0;
-		result=0;
-		int index=0;
-		int x,y;
-		for(int i=0;i<n;i++)
-		{
-			for(int j=0;j<m;j++)
-			{
-				if(M[i][j]==3)
+				cin >>M[i][j];
+				if(M[i][j] == 3)
 				{
-					x=i;
-					y=j;
+					xx=i;
+					yy=j;
+				}
+				if(M[i][j] == 1)
+				{
+					ax[index]=i;
+					bx[index]=1;
+					index++;
 				}
 			}
 		}
-		for(int i=0;i<n;i++)
+		backtrack(0,xx,yy,0);
+		/*for(int i=0;i<index;i++)
 		{
-			for(int j=0;j<m;j++)
-			{
-				if(M[i][j]==3 || M[i][j] == 1)
-				{
-					dem++;
-				}
-			}
-		}
-		while (dem>0)
-		{
-			dem--;
-			BFS(x,y);
-			x=node1;
-			y=node2;
-		}
+			cout<<ax[i]<<" "<<bx[i]<<endl;
+		} */
 		cout<<"Case #"<<tc<<endl;
 		cout<<result<<endl;
-	}
-	return 0;
-}
-using namespace std;
-
-long long arr[20005], L[20005], R[20005];
-int N, maxcount;
-
-void getInput()
-{
-	cin >> N;
-	maxcount = 0;
-	for(int i = 0; i < 20005; i++)
-	{
-		arr[i] = L[i] = R[i] = 0;
-	}
-	for(int i = 1; i <= N; i++)
-	{
-		cin >> arr[i];
-	}
-	L[0] = R[N+1] = 0;
-	for(int i = 1; i<= N; i++)
-	{
-		L[i] = L[i-1] + arr[i];
-	}
-	for(int i=N; i>=1; i--)
-	{
-		R[i] = R[i+1] + arr[i];
-	}
-}
-void backtrack(int s, int e, int count)
-{
-	if(s < e)
-	{
-		for(int i = 1; i <= N; i++)
-		{
-			long long sL= L[i] - L[s-1];
-			long long sR = R[i+1] - R[e+1];
-			if(sL == sR)
-			{
-				count++;
-				if(count > maxcount) maxcount = count;
-				backtrack(s,i,count);
-				backtrack(i+1, e, count);
-                count--;
-				return;
-			}
-		}
-	}
-}
-
-void solve()
-{
-	if(L[N] == 0) maxcount = N - 1;
-	else
-	{
-		backtrack(1,N,0);
-	}
-	cout<<maxcount<<endl;
-}
-int main()
-{
-	//freopen("input.txt", "r", stdin);
-	int T;
-	cin >> T;
-	for(int tc = 1; tc <= T; tc++)
-	{
-		getInput();
-		solve();
 	}
 	return 0;
 }
