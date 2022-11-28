@@ -49,53 +49,40 @@ Output
 ///
 #include <iostream>
 using namespace std;
-int a[20000],n,dem;
-int sum1,sum2;
-void backtrack(int k , int x, int y)
+int n, a[20000],dem;
+int binary(int l, int r)
 {
-	if(k>n/2)
-	{
-		return ;
+	int sum=0, sum1=0,index;
+	for(int i=l;i<=r;i++)
+	{ 
+		sum+=a[i];
 	}
-	sum1=0;
-	sum2=0;
-	for(int i=x;i<x+k;i++)
+	if(sum%2 != 0)
 	{
-		sum1+=a[i];
+		return 0;
 	}
-	for(int i=y;i>=x+k;i--)
-	{
-		sum2+=a[i];
-	}
-	if(sum1==sum2)
-	{
-		dem++;
-		backtrack(k,x,x+k-1);
-		backtrack(k,x+k,y);
-	}
-	sum1=0;
-	sum2=0;
-	for(int i=y;i>y-k;i--)
+	for(int i=l;i<=r;i++)
 	{
 		sum1+=a[i];
+		if(sum1 == sum/2)
+		{
+		     index=i;
+			break;
+		}
+		if(sum1>sum/2)
+		{
+			return 0;
+		}
 	}
-	for(int i=x;i<=y-k;i++)
-	{
-		sum2+=a[i];
-	}
-	if(sum1==sum2)
-	{
-		dem++;
-		backtrack(k,x,y-k);
-		backtrack(k,y-k+1,y);
-	}
-	backtrack(k+1,x,y);
+	int left= binary(l,index);
+	int right= binary(index+1,r);
+	return (1+max(left,right));
 }
 int main()
 {
-	//freopen("input.txt","r",stdin);
+	freopen("input.txt","r",stdin);
 	int t;
-	cin>>t;
+	cin>> t;
 	for(int tc=1;tc<=t;tc++)
 	{
 		cin>>n;
@@ -104,7 +91,7 @@ int main()
 			cin>>a[i];
 		}
 		dem=0;
-		backtrack(1,0,n-1);
+		dem=binary(0,n-1);
 		cout<<dem<<endl;
 	}
 	return 0;
