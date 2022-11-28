@@ -185,3 +185,72 @@ int main()
 	}
 	return 0;
 }
+using namespace std;
+
+long long arr[20005], L[20005], R[20005];
+int N, maxcount;
+
+void getInput()
+{
+	cin >> N;
+	maxcount = 0;
+	for(int i = 0; i < 20005; i++)
+	{
+		arr[i] = L[i] = R[i] = 0;
+	}
+	for(int i = 1; i <= N; i++)
+	{
+		cin >> arr[i];
+	}
+	L[0] = R[N+1] = 0;
+	for(int i = 1; i<= N; i++)
+	{
+		L[i] = L[i-1] + arr[i];
+	}
+	for(int i=N; i>=1; i--)
+	{
+		R[i] = R[i+1] + arr[i];
+	}
+}
+void backtrack(int s, int e, int count)
+{
+	if(s < e)
+	{
+		for(int i = 1; i <= N; i++)
+		{
+			long long sL= L[i] - L[s-1];
+			long long sR = R[i+1] - R[e+1];
+			if(sL == sR)
+			{
+				count++;
+				if(count > maxcount) maxcount = count;
+				backtrack(s,i,count);
+				backtrack(i+1, e, count);
+                count--;
+				return;
+			}
+		}
+	}
+}
+
+void solve()
+{
+	if(L[N] == 0) maxcount = N - 1;
+	else
+	{
+		backtrack(1,N,0);
+	}
+	cout<<maxcount<<endl;
+}
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	int T;
+	cin >> T;
+	for(int tc = 1; tc <= T; tc++)
+	{
+		getInput();
+		solve();
+	}
+	return 0;
+}
