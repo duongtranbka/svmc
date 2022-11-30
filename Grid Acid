@@ -238,13 +238,12 @@ Case #9
 
 #include <iostream>
 using namespace std;
-#define MAXN  3000
-int n, m,map[MAXN][MAXN];
-int Qx[100000],Qy[100000],Qd[100000];
+int n,m,map[3000][3000];
+int Qx[4500000],Qy[4500000],Qd[4500000];
 int f=-1,r=-1;
 int dx[4]={-1,0,1,0};
 int dy[4]={0,1,0,-1};
-int timespecial,checkstone;
+int result;
 void Push(int x, int y, int d)
 {
 	f++;
@@ -259,36 +258,48 @@ void Pop(int &x, int &y, int &d)
 	y=Qy[r];
 	d=Qd[r];
 }
-bool checkspecial(int x, int y)
+bool checkfirst(int x, int y)
+{
+	if(x == 0 || x == n-1 || y ==0 || y == m-1)
+	{
+		return true;
+	}
+	for(int i=0;i<4;i++)
+	{
+		int aa=x+dx[i];
+		int bb=y+dy[i];
+		if(aa>=0 && aa<n && bb >=0 && bb<m)
+		{
+			if(map[aa][bb] ==  0 )
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool checkloang(int x, int y)
 {
 	int dem=0;
 	for(int i=0;i<4;i++)
 	{
 		int aa=x+dx[i];
 		int bb=y+dy[i];
-		if(aa>=0 && aa <n && bb >=0 && bb <m && map[aa][bb] == 3)
+		if(aa>=0 && aa<n && bb >=0 && bb <m)
 		{
-			dem++;
+			if(map[aa][bb]==3)
+			{
+				dem++;
+			}
 		}
 	}
 	if(dem==4)
 	{
 		return true;
 	}else
-		return false;
-}
-bool checkdiemstone(int x, int y)
-{
-	for(int i=0;i<4;i++)
 	{
-		int aa=x+dx[i];
-		int bb=y+dy[i];
-		if(aa>=0 && aa <n && bb >=0 && bb <m &&map[aa][bb] == 0)
-		{
-			return false;
-		}
+		return false;
 	}
-	return true;
 }
 void BFS(int x, int y)
 {
@@ -304,32 +315,19 @@ void BFS(int x, int y)
 		{
 			int aa=a+dx[i];
 			int bb=b+dy[i];
-			if(aa>=0 && aa<n && bb >= 0 && bb <m && map[aa][bb] != 0)
+			if(aa>=0 && aa<n && bb >=0 && bb <m)
 			{
 				if(map[aa][bb] == 1)
 				{
 					Push(aa,bb,d);
 					map[aa][bb]=3;
 				}
-				else if(map[aa][bb] == 2)
+				if(map[aa][bb] == 2 && checkloang(aa,bb))
 				{
-					if(!checkdiemstone(aa,bb))
-					{
-						map[aa][bb]=4;
-						checkstone=1;
-						break;
-					}
-					else if(checkspecial(aa,bb) && checkdiemstone(aa,bb))
-					{
-						map[aa][bb]=3;
-						timespecial=d;
-					}
+					map[aa][bb]=3;
+					result=d;
 				}
 			}
-		}
-		if(checkstone ==1)
-		{
-			break;
 		}
 	}
 }
@@ -340,53 +338,61 @@ int main()
 	cin>>t;
 	for(int tc=1;tc<=t;tc++)
 	{
-		timespecial=0;
-		checkstone=0;
-		cin>>n>>m;
 		int a,b;
-		cin>>a>>b;
+		cin>>n>>m>>a>>b;
 		a=a-1;
 		b=b-1;
+		int xx,yy;
+		result=0;
 		for(int i=0;i<n;i++)
 		{
 			for(int j=0;j<m;j++)
 			{
 				cin>>map[i][j];
-			}
-		}
-		//map[a][b]=3;
-		BFS(a,b);
-		int visitspecial=0,visitall=0,visit4=0;
-		for(int i=0;i<n;i++)
-		{
-			for(int j=0;j<m;j++)
-			{
-				if(map[i][j] == 4)
+				if(map[i][j] == 2)
 				{
-					visit4=1;
-					break;
-				}
-				if(map[i][j]==2)
-				{
-					visitspecial=1;
-					break;
-				}
-				if(map[i][j]==1)
-				{
-					visitall=1;
+					xx=i;
+					yy=j;
 				}
 			}
 		}
-		cout<<"Case #"<<tc<<endl;
-		if(visitspecial==1 || visit4 == 1 )
+		if(checkfirst(xx,yy))
 		{
+			cout<<"Case #"<<tc<<endl;
 			cout<<"-1"<<" "<<"-1"<<endl;
-		}else if(visitspecial==0 && visitall ==1)
-		{
-			cout<<timespecial<< " "<<"-1"<<endl;
 		}else
 		{
-			cout<<timespecial<<" "<<Qd[f]+1<<endl;;
+			int ktraso2=0,ktraso1=0;
+			map[a][b]=3;
+			BFS(a,b);
+			for(int i=0;i<n;i++)
+			{
+				for(int j=0;j<m;j++)
+				{
+					if(map[i][j] == 2)
+					{
+						ktraso2=1;
+					}
+					if(map[i][j] ==1)
+					{
+						ktraso1=1;
+					}
+				}
+			}
+            cout<<"Case #"<<tc<<endl;
+			if(ktraso2 == 1)
+			{
+				cout<<"-1"<<" "<<"-1"<<endl;
+			}else
+			{
+				if(ktraso1 == 1)
+				{
+					cout<<result<<" "<<"-1"<<endl;
+				}else
+				{
+					cout<<result<<" "<<Qd[f]+1<<endl;
+				}
+			}
 		}
 	}
 	return 0;
