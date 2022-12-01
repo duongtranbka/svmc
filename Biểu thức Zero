@@ -1,0 +1,43 @@
+Cho một số tự nhiên N ≤ 9. Giữa các số từ 1 đến N hãy thêm vào các dấu + và - sao cho kết quả thu được bằng 0. Hãy viết chương trình tìm tất cả các khả năng có thể.
+
+[Input]
+
+Dòng đầu tiên là T số testcase. T dòng tiếp theo là các số tự nhiên N <= 9.
+
+ 
+
+[Output]
+
+Mỗi test case in ra “# ” theo sau là số lượng kết quả tìm được mỗi test case. 
+
+
+
+[Sample] 
+
+[Input]
+
+1
+
+7
+
+ 
+
+[Output]
+
+#1 6
+
+ 
+
+Giải thích
+
+1-2-3-4-5+6+7=0
+
+1-2+3+4-5+6-7=0
+
+1-23-45+67=0
+
+1-23+4+5+6+7=0
+
+1+2-3-4+5+6-7=0
+
+1+2-3+4-5-6+7=0
