@@ -58,3 +58,147 @@ Output
 
 2
 ///
+#include <iostream>
+using namespace std;
+char cc;
+// 1 -  len , 2- phai, 3 - xuong, 4 - trai
+int m,n,map[200][200],result,mark,visit[200][200],navi[200][200];
+int Qx[100000],Qy[100000],Qd[100000];
+int f=-1,r=-1;
+int dx[4]={-1,0,1,0};
+int dy[4]={0,1,0,-1};
+int quetx[8]={-1,-1,-1,0,1,1,1,0};
+int quety[8]={-1,0,1,1,1,0,-1,-1};
+bool up_down,right_left;
+int vc = 99;
+int checknavi(int x, int y)
+{
+	if(x==-1 && y == 0)
+	{
+		return 1;
+	}
+	if(x==0 && y == 1)
+	{
+		return 2;
+	}
+	if(x==1 && y == 0)
+	{
+		return 3;
+	}
+	if( x==0 && y == -1)
+	{
+		return 4;
+	}
+}
+void Push(int x, int y, int d)
+{
+	f++;
+	Qx[f]=x;
+	Qy[f]=y;
+	Qd[f]=d;
+}
+void Pop(int &x, int &y, int &d)
+{
+	r++;
+	x=Qx[r];
+	y=Qy[r];
+	d=Qd[r];
+}
+void BFS(int x, int y)
+{
+	Push(x,y,0);
+	while(f!=r)
+	{
+		int a,b,d;
+		Pop(a,b,d);
+		d++;
+		for(int i=0;i<4;i++)
+		{
+			int aa=a+dx[i];
+			int bb = b+dy[i];
+			if(aa>=0 && aa<m && bb >=0 && bb <n && map[aa][bb]!=1 && map[aa][bb] != 2)
+			{
+				if(map[a][b]==-1)
+				{
+					Push(aa,bb,d);
+					visit[aa][bb]=map[a][b]+1;
+					navi[aa][bb]=checknavi(dx[i],dy[i]);
+				}else
+				{
+					if(visit[aa][bb] == vc)
+					{
+						navi[aa][bb] = checknavi(dx[i],dy[i]);
+						if(navi[aa][bb] == navi[a][b])
+						{
+							visit[aa][bb]=visit[a][b];
+							Push(aa,bb,d);
+						}else
+						{
+							visit[aa][bb]=visit[a][b]+1;
+							Push(aa,bb,d);
+						}
+					}
+				}
+				
+			}
+		}
+	}
+}
+int main()
+{
+	freopen("input.txt","r",stdin);
+	int t;
+	cin>>t;
+	for(int tc=1;tc<=t;tc++)
+	{
+		cin>>n>>m;
+		int a,b,c,d;
+		cin>>b>>a>>d>>c;
+		a=a-1;
+		b=b-1;
+		c=c-1;
+		d=d-1;
+		for(int i=0;i<m;i++)
+		{
+			for(int j=0;j<n;j++)
+			{
+				map[i][j]=1;
+				visit[i][j]=vc;
+				navi[i][j]=0;
+			}
+		}
+		for(int i=0;i<m;i++)
+		{
+			for(int j=0;j<n;j++)
+			{
+				cin>>cc;
+				if(cc == '1')
+				{
+					map[i][j]=1;
+				}else
+				{
+					map[i][j]=0;
+				}
+			}
+		}
+		map[c][d]=2;
+		map[a][b]=-1;
+		visit[a][b]=0;
+		BFS(a,b);
+		int result=9999;
+				for(int k=0;k<8;k++)
+				{
+					int aa=c+quetx[k];
+					int bb=d+quety[k];
+					if(aa>=0 && aa<m && bb >=0 && bb <n && visit[aa][bb] != 99)
+					{
+						if(visit[aa][bb] <result)
+						{
+							result= visit[aa][bb];
+						}
+					}
+				}
+		cout<<result+1<<endl;
+	}
+	return 0;
+}
