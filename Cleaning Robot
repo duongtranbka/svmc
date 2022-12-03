@@ -84,13 +84,13 @@ Case #5
 ///
 #include <iostream>
 using namespace std;
-int n,m,M[100][100],result,index;
-int Qx[10000000],Qy[10000000],Qd[10000000];
+int m,n,a[100][100],visit[100][100],adjMap[100][100],index,result;
+int dx[100],dy[100];
+int Qx[100000],Qy[100000],Qd[100000];
 int f=-1,r=-1;
-int dx[4]={-1,0,1,0};
-int dy[4]={0,1,0,-1};
-int ax[20],bx[20];
-bool visited[20];
+int dxx[4]={-1,0,1,0};
+int dyy[4]={0,1,0,-1};
+bool visited[100];
 void Push(int x, int y, int d)
 {
 	f++;
@@ -105,90 +105,115 @@ void Pop(int &x, int &y, int &d)
 	y=Qy[r];
 	d=Qd[r];
 }
-int BFS(int x, int y, int h, int k)
+bool isSafe(int x, int y)
 {
-	f=-1;
-	r=-1;
+	if(x>=0 && x<m && y >= 0 && y<n)
+	{
+		return true;
+	}
+	return false;
+}
+void resetmap()
+{
+	for(int i=0;i<m;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			visit[i][j]=a[i][j];
+		}
+	}
+}
+int BFS(int x, int y, int z, int t)
+{
+	f=-1,r=-1;
 	Push(x,y,0);
 	while(f!=r)
 	{
 		int a,b,d;
 		Pop(a,b,d);
 		d++;
-	for(int i=0;i<4;i++)
-	{
-		int aa=a+dx[i];
-		int bb=b+dy[i];
-		if(aa>=0 && aa<n && bb>=0 && bb <m && 2 != M[aa][bb])
+		for(int i=0;i<4;i++)
 		{
-			if( aa == h && bb == k)
+			int aa=a+dxx[i];
+			int bb=b+dyy[i];
+			if(isSafe(aa,bb) && visit[aa][bb] != 2 )
 			{
-				return Qd[f];
+				if(aa == z && bb ==t)
+				{
+					return d;
+				}
+				Push(aa,bb,d);
+				visit[aa][bb]=2;
 			}
-			Push(aa,bb,d);
 		}
 	}
-	}
-	return -1;
-}
-void backtrack(int k, int x, int y, int sum)
+} 
+void backtrack(int x, int k, int sum)
 {
-	if(k==index)
+	if(k == (index-1))
 	{
-		if(sum<result)
+		if(sum <result)
 		{
 			result=sum;
 		}
 		return;
 	}
-	for(int i=0;i<index;i++)
+	for(int i=1;i<index;i++)
 	{
 		if(!visited[i])
 		{
 			visited[i]=true;
-			int kc = BFS(x,y,ax[i],bx[i]);
-			backtrack(k+1,ax[i],bx[i],sum+kc);
+			backtrack(i,k+1,sum+adjMap[x][i]);
 			visited[i]=false;
 		}
 	}
-
 }
 int main()
 {
 	freopen("input.txt","r",stdin);
-	int t;
-	cin>>t;
-	for(int tc=1;tc<=t;tc++)
+	int T;
+	cin>>T;
+	for(int tc=1;tc<=T;tc++)
 	{
-		cin >>n>>m;
-		int xx,yy;
-		index=0;
-		result=9999999;
-		for(int i=0;i<n;i++)
+		cin>>m>>n;
+		index=1;
+		result=99999;
+		for(int i=0;i<m;i++)
 		{
-			for(int j=0;j<m;j++)
+			for(int j=0;j<n;j++)
 			{
-				cin >>M[i][j];
-				if(M[i][j] == 3)
+				cin>>a[i][j];
+				visit[i][j]=a[i][j];
+				if(a[i][j] == 3)
 				{
-					xx=i;
-					yy=j;
+					dx[0]=i;
+					dy[0]=j;
 				}
-				if(M[i][j] == 1)
+				if(a[i][j]==1)
 				{
-					ax[index]=i;
-					bx[index]=1;
+					dx[index]=i;
+					dy[index]=j;
 					index++;
 				}
 			}
 		}
-		backtrack(0,xx,yy,0);
-		/*for(int i=0;i<index;i++)
+		for(int i=0;i<index;i++)
 		{
-			cout<<ax[i]<<" "<<bx[i]<<endl;
-		} */
+			for(int j=0;j<index;j++)
+			{
+				if(i != j)
+				{
+					int kc=BFS(dx[i],dy[i],dx[j],dy[j]);
+					adjMap[i][j]=kc;
+					resetmap();
+				}
+				//cout<<adjMap[i][j]<<" ";
+			}
+		}
+		backtrack(0,0,0);
 		cout<<"Case #"<<tc<<endl;
 		cout<<result<<endl;
+
 	}
 	return 0;
 }
