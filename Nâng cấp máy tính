@@ -65,3 +65,79 @@ Output
 
 Giải thích: Để mua được 3 thiết bị 2, 4, 5 với giá rẻ nhất, ta sẽ mua gói giá rẻ 1 gồm 1, 2, 5 với giá 30 và mua thiết bị 4 ở chợ Trời với giá 18, tổng là 30 + 18 = 48.
 
+//
+#include <iostream>
+using namespace std;
+int T,N,M,a[100][100],dem,linhkien[100],result;
+bool visited[100][100],b[100];
+void dequi(int k , int sum)
+{
+	if(k==dem)
+	{
+		if(sum<result)
+		{
+			result=sum;
+		}
+		return;
+	}
+	for(int i=0;i<dem;i++)
+	{
+		if(!b[i])
+		{
+			b[i]=true;
+			for(int j=0;j<M+N;j++)
+			{
+				if(!visited[j][linhkien[i]] && a[j][linhkien[i]] == 1)
+				{
+					visited[j][linhkien[i]]=true;
+					dequi(k+1,sum+a[j][0]);
+					visited[j][linhkien[i]]=false;
+				}
+			}
+			b[i]=false;
+		}
+	}
+}
+int main()
+{
+	freopen("input.txt","r",stdin);
+	cin>>T;
+	for(int tc=1;tc<=T;tc++)
+	{
+		cin>>N;
+		for(int i=0;i<N;i++)
+		{
+			cin>>a[i][0];
+			a[i][i+1]=1;
+		}
+		int x,y;
+		result=9999;
+		cin>>M;
+		for(int i=N;i<(N+M);i++)
+		{
+			cin>>a[i][0];
+			cin>>x;
+			for(int j=1;j<=x;j++)
+			{
+				cin>>y;
+				a[i][y]=1;
+			}
+		}
+		/*for(int i=0;i<(N+M);i++)
+		{
+			for(int j=0;j<N+1;j++)
+			{
+				cout<<a[i][j]<<" ";
+			}
+			cout<<"\n";
+		} */
+		cin>>dem;
+		for(int i=0;i<dem;i++)
+		{
+			cin>>linhkien[i];
+		}
+		dequi(0,0);
+		cout<<"#"<<tc<<" "<<result<<endl;
+	}
+	return 0;
+}
