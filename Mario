@@ -100,3 +100,124 @@ int main(int argc, char** argv)
 	}
 	return 0;//Your program should return 0 on normal termination.
 }
+////
+#include <iostream>
+using namespace std;
+int N,M, map[100][100],visited[100][100];
+bool kiemtra;
+int Qx[10000000],Qy[10000000],Qd[10000000];
+int f=-1,r=-1;
+int dx[4]={-1,0,1,0};
+int dy[4]={0,1,0,-1};
+void resetvisit()
+{
+	for(int i=0;i<N;i++)
+	{
+		for(int j=0;j<M;j++)
+		{
+			visited[i][j]=0;
+		}
+	}
+}
+void Push(int x, int y, int d)
+{
+	f++;
+	Qx[f]=x;
+	Qy[f]=y;
+	Qd[f]=d;
+}
+void Pop(int &x, int &y, int &d)
+{
+	r++;
+	x=Qx[r];
+	y=Qy[r];
+	d=Qd[r];
+}
+bool isSafe(int x, int y)
+{
+	if(x>=0 && x<N && y<M && y>=0 && visited[x][y]==0)
+	{
+		return true;
+	}
+	return false;
+}
+void BFS(int x, int y, int h)
+{
+	f=-1;
+	r=-1;
+	Push(x,y,0);
+	while(f!=r)
+	{
+		int a,b,d;
+		Pop(a,b,d);
+		d++;
+		for(int i=0;i<4;i++)
+		{
+			int aa=a+dx[i];
+			int bb=b+dy[i];
+			if(isSafe(aa,bb) )
+			{
+				if(map[aa][bb] == 3)
+				{
+					kiemtra=true;
+					return;
+				}
+				if(map[aa][bb]==1)
+				{
+					visited[aa][bb]=-1;
+					Push(aa,bb,d);
+				}
+				if(map[aa][bb] == 0)
+				{
+					int xx=a+h*dx[i];
+					int yy=a+h*dy[i];
+					if(isSafe(xx,yy) )
+					{
+						if(map[xx][yy] ==3)
+						{
+							kiemtra=true;
+							return ;
+						}
+						if(map[xx][yy]==1)
+						{
+							visited[xx][yy]=-1;
+							Push(xx,yy,d);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+int main()
+{
+	freopen("input.txt","r",stdin);
+	int T;
+	cin>>T;
+	for(int tc=1;tc<=T;tc++)
+	{
+		cin>>N>>M;
+		for(int i=0;i<N;i++)
+		{
+			for(int j=0;j<M;j++)
+			{
+				cin>>map[i][j];
+			}
+		}
+		int h=1;
+		visited[N-1][0]=-1;
+		kiemtra=false;
+		while(!kiemtra)
+		{
+			BFS(N-1,0,h);
+			resetvisit();
+			if(kiemtra)
+			{
+				break;
+			}
+			h++;
+		}
+		cout<<h<<endl;
+	}
+	return 0;
+}
